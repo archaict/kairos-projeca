@@ -1,0 +1,51 @@
+@startuml
+
+partition "User" {
+    start
+    :Access SFA Dashboard;
+    :Select Visit Management;
+}
+
+partition "Visit Management" {
+    :Retrieve Visit List;
+    if (Visit Exists?) then (yes)
+        :Select Visit;
+        :View Visit Details;
+        if (Add Order?) then (yes)
+            :Navigate to Order Taking;
+        else (no)
+            :End Visit;
+        endif
+    else (no)
+        :Create New Visit;
+    endif
+}
+
+partition "Order Taking" {
+    :Create New Order;
+    :Add Products;
+    :Calculate Total;
+    if (Order Valid?) then (yes)
+        :Confirm Order;
+        :Navigate to Payment Method;
+    else (no)
+        :Correct Order Errors;
+    endif
+}
+
+partition "Payment Method" {
+    :Select Payment Method;
+    :Process Payment;
+    if (Payment Successful?) then (yes)
+        :Confirm Payment;
+    else (no)
+        :Handle Payment Failure;
+    endif
+}
+
+partition "User" {
+    :View Order Confirmation;
+    stop
+}
+
+@enduml
